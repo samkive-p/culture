@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>박세미 — Culture BP · 조직문화</title>
+  <title>박세미 — 조직문화 · 교육</title>
   <link rel="stylesheet" as="style" crossorigin
     href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
   <style>
@@ -258,6 +258,44 @@
     .about, .cases, .voices, .retro, .contact { padding-left: 5vw; padding-right: 5vw; }
     footer { padding: 2rem 5vw; flex-direction: column; gap: 0.5rem; text-align: center; }
   }
+
+  /* PRINT — 카드 앞/뒤를 모두 펼쳐서 출력 */
+  @media print {
+    @page { margin: 14mm 12mm; }
+    body { font-weight: 400; }
+    nav { display: none; }
+
+    /* 카드 스테이지 해제: 앞면과 뒷면을 일반 흐름으로 */
+    .card-body { height: auto !important; }
+    .card-front, .card-back {
+      position: static; height: auto; opacity: 1 !important;
+      pointer-events: auto; overflow: visible;
+    }
+    .card-front { display: block; margin-bottom: 1.2rem; }
+    .card-front .card-photo { display: none; }
+    .cf-wide { display: block; }
+    .btn-tog { display: none; }
+
+    /* 이미지 자연 높이 */
+    .cb-imgs { flex-direction: column; }
+    .cb-img-box img, .cb-img-box video { height: auto !important; width: 100%; }
+    .case-card--wide .cb-vidwrap { flex-direction: column; }
+    .case-card--wide .cb-vidwrap .cb-img-box { height: auto; }
+
+    /* 페이지 단위 보호 */
+    .case-card, .cb-result, .voice-card, .retro-pull {
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .hero { min-height: auto; padding: 2rem 0 3rem; }
+    .about, .cases, .voices, .retro, .contact { padding: 2.5rem 0; }
+    .card-grid { display: block; }
+    .case-card { margin-bottom: 1.5rem; }
+
+    /* 배경색·강조색 유지 (기본은 인쇄 시 삭제됨) */
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .hero, .h-eye, .h-title, .h-sub { animation: none; opacity: 1; }
+    [data-rv] { opacity: 1 !important; transform: none !important; }
+  }
   </style>
 </head>
 <body>
@@ -276,29 +314,25 @@
 
 <!-- HERO -->
 <section class="hero" id="top">
-  <p class="h-eye">Culture &amp; People Portfolio · 박세미</p>
+  <p class="h-eye">조직문화 · 교육 Portfolio · 박세미</p>
   <h1 class="h-title">
-    사람이 두 배로 늘어도<br>
-    <em>우리다움</em>이 남는 조직은<br>
-    무엇이 다를까요?
+    선언된 가치는<br>
+    어떻게 <em>일하는 방식</em>이<br>
+    될 수 있을까요?
   </h1>
-  <p class="h-sub">겉보기엔 다른 동료들을 땅속에서 잇는 균근처럼, 저는 말로만 떠돌던 '우리다움'을 문서와 시스템으로 붙잡아 매일의 행동으로 만들어 온 사람입니다.</p>
+  <p class="h-sub">저는 조직문화와 교육을 분리해서 보지 않습니다. 겉보기엔 다른 동료들을 땅속에서 잇는 균근처럼, 진단에서 출발해 배움이 행동이 되고 그 행동이 문화로 뿌리내리는 구조를 먼저 만들어 보여주는 사람입니다.</p>
   <div class="h-stats">
     <div>
-      <div class="hs-num">0→1</div>
-      <div class="hs-lbl">전사 가치 체계<br>최초 정의·문서화</div>
+      <div class="hs-num">60%</div>
+      <div class="hs-lbl">현장 독립 기간 단축<br>10개월 → 4개월</div>
     </div>
     <div>
-      <div class="hs-num">97%</div>
-      <div class="hs-lbl">신규 입사자<br>소프트랜딩</div>
+      <div class="hs-num">124%</div>
+      <div class="hs-lbl">온보딩 KPI 달성<br>97% 소프트랜딩</div>
     </div>
     <div>
       <div class="hs-num">2.1배</div>
-      <div class="hs-lbl">조직 확장 속 온보딩<br>99명 → 209명</div>
-    </div>
-    <div>
-      <div class="hs-num">600명+</div>
-      <div class="hs-lbl">온보딩 경험 설계<br>2022 – 2026</div>
+      <div class="hs-lbl">연간 온보딩 규모 확대<br>99명 → 209명</div>
     </div>
   </div>
 </section>
@@ -306,31 +340,32 @@
 <!-- ABOUT -->
 <section class="about" id="about">
   <p class="s-eye">About</p>
-  <h2 class="s-title">문화는 선언으로 만들어지지 않습니다.<br>매일의 행동에 스며들 때 남습니다.</h2>
+  <h2 class="s-title">문화는 선포하는 것이 아니라,<br>구조로 스며들게 하는 것입니다.</h2>
   <div class="about-grid" data-rv>
     <div>
       <p class="about-belief">
         "박세미와 동료라서 든든하다." 커리어 첫날부터 지금까지 지켜온 단 하나의 기준입니다.
       </p>
       <ul class="about-facts">
-        <li>테라로사 8년차 — 바리스타로 시작해 2021년부터 5년간 조직의 문화·교육 기능을 밑그림부터 구축·운영한 사내 유일 현장 출신 기획자</li>
-        <li>전사 핵심 가치와 일하는 방식을 298p 매뉴얼북으로 최초 문서화 · 사내 소식지·호칭 캠페인 등 내부 브랜딩 전반 설계</li>
-        <li>AI를 무기로 HTML/CSS/JS 웹 시스템 직접 개발 · Premiere Pro 독학 영상 제작 · 경영진 협업 및 현장 리더 코칭 경험</li>
-        <li>온보딩 경험 재설계로 신규 입사자 소프트랜딩 97% · 조직 확장 속 연간 인원 2.1배 확대</li>
+        <li>테라로사 8년차 — 바리스타로 시작해 2021년부터 5년간 조직의 조직문화·HRD 기능을 밑그림부터 구축·운영한 사내 유일 현장 출신 기획자</li>
+        <li>AI를 무기로 HTML/CSS/JS 웹 시스템 직접 개발 · Premiere Pro 독학 영상 제작 · 298p 매뉴얼 단독 집필</li>
+        <li>교육생 600명 이상 직접 훈련·평가 배출 · 美 커피 평가 기관 ACE 국제 센서리 교육 조교·통역 2회 참여</li>
+        <li>온보딩 체계 개편으로 연간 교육 인원 99명 → 209명 2.1배 확대 · KPI 124% 달성</li>
+        <li>섬유공학 전공 · 첫 커리어는 해외 발주·품질검수·통관을 전 과정 영어로 수행한 의류 부자재 실무</li>
       </ul>
     </div>
     <div class="pillars">
       <div class="pillar">
-        <div class="p-name">Define What's Ours</div>
-        <div class="p-desc">흩어져 있던 '우리다움'을 언어로 붙잡습니다. 정의되지 않은 문화는 전달될 수 없습니다.</div>
+        <div class="p-name">Diagnose First</div>
+        <div class="p-desc">현상이 아닌 본질을 파고듭니다. 데이터와 현장의 목소리를 동시에 읽어 문제를 정확히 정의합니다.</div>
       </div>
       <div class="pillar">
         <div class="p-name">Zero-to-One Execution</div>
-        <div class="p-desc">매뉴얼이 없으면 씁니다. 툴이 없으면 직접 만듭니다. 문화를 만질 수 있는 실체로 만듭니다.</div>
+        <div class="p-desc">매뉴얼이 없으면 씁니다. 툴이 없으면 직접 만듭니다. 기획을 직접 실행으로 연결합니다.</div>
       </div>
       <div class="pillar">
-        <div class="p-name">Embed, Don't Announce</div>
-        <div class="p-desc">캠페인은 끝나지만 구조는 남습니다. 온보딩과 일상의 접점에 문화를 심습니다.</div>
+        <div class="p-name">Scale by Enabling</div>
+        <div class="p-desc">나 혼자 잘하는 것이 아니라, 팀 전체가 잘할 수 있도록 구조를 설계합니다.</div>
       </div>
     </div>
   </div>
@@ -340,7 +375,7 @@
 <section class="cases" id="cases">
   <div class="cases-head">
     <p class="s-eye">Selected Cases</p>
-    <h2 class="s-title">정의하고, 직접 만들고,<br>조직에 스며들게 했습니다.</h2>
+    <h2 class="s-title">진단하고, 직접 만들고,<br>수치로 증명했습니다.</h2>
   </div>
 
   <div class="card-grid">
@@ -348,7 +383,7 @@
     <!-- CASE 01 -->
     <div class="case-card" id="card-01" data-rv>
       <div class="card-hd">
-        <span class="card-tag">Culture &amp; Identity</span>
+        <span class="card-tag">조직문화 · 사내 커뮤니케이션</span>
         <button class="btn-tog" onclick="tog('01')" aria-label="케이스 열기">⊕</button>
       </div>
       <div class="card-body" id="body-01">
@@ -360,16 +395,16 @@
         </div>
       </div>
       <div class="card-back" id="back-01">
-        <p class="cb-open">전사에 '우리다운 것'이 무엇인지, 정의조차 없었습니다. 문화는 리더가 바뀔 때마다 조금씩 다르게 전달되고 있었습니다.</p>
+        <p class="cb-open">전사에 '우리다운 것'이 무엇인지, 정의조차 없었습니다.</p>
         <ul class="cb-acts">
           <li>
             <strong>브랜드 매뉴얼북 집필 (0→1)</strong> — 핵심 가치와 일하는 방식을 처음으로 문서화
           </li>
           <li>
-            <strong>사내 소식지 직접 구축</strong> — 웹 기반으로 단독 제작 후 팀에 이관
+            <strong>사내 커뮤니케이션 채널 구축</strong> — 웹 기반 사내 소식지를 단독 제작 후 팀에 이관
           </li>
           <li>
-            <strong>호칭 '님' 단일화 캠페인</strong> — 경영진과 협업, 온보딩 전반에 내재화
+            <strong>호칭 '님' 단일화 변화관리</strong> — 경영진 메시지를 현장 언어로 전파, 온보딩 전반에 내재화
           </li>
         </ul>
         <div class="cb-imgs">
@@ -397,7 +432,7 @@
     <!-- CASE 02 -->
     <div class="case-card" id="card-02" data-rv>
       <div class="card-hd">
-        <span class="card-tag">Onboarding Experience</span>
+        <span class="card-tag">Onboarding &amp; Growth</span>
         <button class="btn-tog" onclick="tog('02')" aria-label="케이스 열기">⊕</button>
       </div>
       <div class="card-body" id="body-02">
@@ -409,16 +444,16 @@
         </div>
       </div>
       <div class="card-back" id="back-02">
-        <p class="cb-open">입사 첫 3개월은 조직을 처음 배우는 시간입니다. 그런데 그 경험이 배치 매장마다 완전히 달랐습니다.</p>
+        <p class="cb-open">원인은 개인의 역량 부족이 아니었습니다. 교육·실행·피드백이 단절된 구조였습니다.</p>
         <ul class="cb-acts">
           <li>
             <strong>순환 온보딩 설계</strong> — 집체 교육을 3-3-2 현장 순환 구조로 전환
           </li>
           <li>
-            <strong>리더십 패러다임 전환</strong> — 리더를 '지시자'에서 '코치'로 재정의
+            <strong>리더십 교육 병행 설계</strong> — 리더를 '지시자'에서 '코치'로 재정의
           </li>
           <li>
-            <strong>온보딩 사이트 단독 구축</strong> — 트래커·퀴즈·평가를 HTML/CSS/JS로
+            <strong>교육 플랫폼 단독 구축</strong> — 트래커·퀴즈·평가·학습 데이터 관리를 HTML/CSS/JS로
           </li>
         </ul>
         <div class="cb-imgs single">
@@ -442,7 +477,7 @@
               <div class="cn-lbl">온보딩 KPI<br>초과 달성</div>
             </div>
           </div>
-          <p class="cb-rtext">개편 전 연간 99명이던 온보딩 규모를 2025년 209명으로 <strong>2.1배 확대</strong>했습니다. 사람이 두 배로 늘어도 신규 입사자가 받는 첫 경험의 질이 흔들리지 않는다는 뜻입니다.</p>
+          <p class="cb-rtext">개편 전 연간 99명이던 온보딩 규모를 2025년 209명으로 <strong>2.1배 확대</strong>했습니다. 인원이 두 배가 되어도 품질이 흔들리지 않는, 확장 가능한 구조라는 뜻입니다.</p>
           <div class="growth">
             <div class="g-col"><span class="g-val">70</span><div class="g-bar" style="height:24px"></div><span class="g-yr">'22</span></div>
             <div class="g-col"><span class="g-val">75</span><div class="g-bar" style="height:26px"></div><span class="g-yr">'23</span></div>
@@ -459,7 +494,7 @@
     <!-- CASE 03 — WIDE -->
     <div class="case-card case-card--wide" id="card-03" data-rv>
       <div class="card-hd">
-        <span class="card-tag">Enablement &amp; Systems</span>
+        <span class="card-tag">L&amp;D System</span>
         <button class="btn-tog" onclick="tog('03')" aria-label="케이스 열기">⊕</button>
       </div>
       <div class="card-body" id="body-03">
@@ -516,8 +551,8 @@
 <!-- VOICES -->
 <section class="voices" id="voices">
   <div class="voices-head">
-    <h2 class="voices-title">숫자가 효율을 증명했다면,<br><em>이 문장들은 문화를 증명합니다.</em></h2>
-    <p class="voices-note">제가 설계한 온보딩을 처음 통과한 신규 입사자들의 서베이 응답 中 (원문 발췌)</p>
+    <h2 class="voices-title">진단은 숫자로 시작해,<br><em>구성원의 문장으로 완성됩니다.</em></h2>
+    <p class="voices-note">제가 설계·운영한 온보딩 서베이 응답 中 · 정량 지표와 함께 정성 응답을 수집해 다음 차수 개선에 반영했습니다</p>
   </div>
   <div class="voice-list" data-rv>
     <div class="voice-card">
@@ -565,7 +600,7 @@
 <section class="contact" id="contact">
   <p class="s-eye">Contact</p>
   <h2 class="s-title">서로 다른 동료들을 잇는<br>균근이 되고 싶습니다</h2>
-  <p class="contact-sub">눈에 띄지 않아도, 연결한 사람들이 더 높이 자랄 때 제 역할을 다합니다. 조직이 커질수록 그 연결은 저절로 생기지 않습니다.</p>
+  <p class="contact-sub">눈에 띄지 않아도, 연결한 사람들이 더 높이 자랄 때 제 역할을 다합니다.</p>
   <div class="contact-btns">
     <a href="mailto:bobsemi@me.com" class="btn-primary">이메일 보내기</a>
   </div>
@@ -573,7 +608,7 @@
 
 <!-- FOOTER -->
 <footer>
-  <span>박세미 · Culture BP · 조직문화</span>
+  <span>박세미 · 조직문화 · 교육</span>
   <span>© 2026</span>
 </footer>
 
