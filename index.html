@@ -3,20 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>박세미 — 조직문화 · 교육</title>
+  <title>박세미 — Culture BP</title>
   <link rel="stylesheet" as="style" crossorigin
     href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
   <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  /* ===== 팔레트 =====
+     색을 바꾸려면 --accent 와 --accent-rgb 두 줄만 같은 색으로 맞추면
+     페이지 전체(강조 텍스트, 카드 배경, 그래프, 버튼)가 같이 바뀝니다.
+     지금 값은 테라로사 로고 레드 #C3181F 입니다. */
   :root {
     --canvas: #ffffff;
-    --parch:  #f5f5f7;
-    --dark:   #1c1c1e;
-    --ink:    #1d1d1f;
-    --muted:  #6e6e73;
-    --accent: #C62917;
-    --adim:   rgba(198,41,23,0.07);
+    --parch:  #F5F3F3;
+    --dark:   #1E1A1B;
+    --ink:    #1E1A1B;
+    --muted:  #8C8589;
+    --accent: #C3181F;
+    --accent-rgb: 195, 24, 31;
+    --adim:   rgba(var(--accent-rgb), 0.08);
     --line:   rgba(0,0,0,0.09);
     --r:      20px;
     --sans:   'Pretendard Variable', Pretendard, 'Noto Sans KR', sans-serif;
@@ -51,7 +56,7 @@
   .h-title { font-size: clamp(2.1rem, 5.2vw, 3.9rem); font-weight: 700; line-height: 1.14; letter-spacing: -0.03em; word-break: keep-all; opacity: 0; animation: fu 0.8s 0.4s forwards; }
   .h-title em { color: var(--accent); font-style: normal; }
   .h-sub { margin-top: 2.2rem; font-size: 1rem; color: #555; line-height: 1.82; max-width: 54ch; opacity: 0; animation: fu 0.8s 0.6s forwards; }
-  .h-stats { display: flex; gap: 3.5rem; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--line); opacity: 0; animation: fu 0.8s 0.8s forwards; }
+  .h-stats { display: flex; gap: 3.5rem; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--line); opacity: 0; animation: fu 0.8s 0.8s forwards; flex-wrap: wrap; }
   .hs-num { font-size: 2.4rem; font-weight: 700; letter-spacing: -0.03em; color: var(--accent); line-height: 1; }
   .hs-lbl { font-size: 0.72rem; color: var(--muted); margin-top: 0.3rem; line-height: 1.5; }
 
@@ -72,91 +77,109 @@
   .p-name { font-size: 0.73rem; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink); margin-bottom: 0.35rem; }
   .p-desc { font-size: 0.86rem; color: #555; line-height: 1.72; }
 
-  /* CASES */
+  /* CASES — toss.im/team style: uniform square-ish cards, 2 per row */
   .cases { background: var(--canvas); padding: 7rem 7vw; border-top: 1px solid var(--line); }
   .cases-head { margin-bottom: 3.5rem; }
-  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
 
-  /* CARD BASE */
-  .case-card { background: var(--parch); border-radius: var(--r); overflow: hidden; padding: 2rem 2rem 0; }
-  .case-card--wide { grid-column: 1 / -1; }
-  .card-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
-  .card-tag { font-size: 0.66rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+  .case-card {
+    position: relative; border-radius: 28px; overflow: hidden;
+    aspect-ratio: 1 / 1.12; background: var(--parch);
+  }
+  .card-face { position: absolute; inset: 0; display: flex; flex-direction: column; transition: opacity 0.3s ease; }
+
+  /* ---- FRONT ---- */
+  .card-front { padding: 2.1rem 2.1rem 0; background: linear-gradient(170deg, #FAF5F5 0%, #F4ECEC 55%, #EEE5E5 100%); }
+  .case-card.is-open .card-front { opacity: 0; pointer-events: none; }
+  .card-tag { font-size: 0.68rem; letter-spacing: 0.13em; text-transform: uppercase; color: #8A8085; flex-shrink: 0; }
+  .card-title { font-size: 1.32rem; font-weight: 700; line-height: 1.34; letter-spacing: -0.025em;
+    word-break: keep-all; margin-top: 0.9rem; color: var(--ink); flex-shrink: 0; }
+  .card-photo { flex: 1; min-height: 60px; margin: 1.5rem -2.1rem 0; position: relative; overflow: hidden; }
+  .card-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* Chart visual used where no photo exists (case 01) */
+  .cv-wrap { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 2.1rem; margin-top: 1.2rem; }
+  .cv-chart { flex: 1; display: flex; align-items: flex-end; gap: 8px; min-height: 90px; }
+  .cv-chart .g-col { height: 100%; justify-content: flex-end; }
+  .cv-chart .g-bar { width: 100%; max-width: 46px; }
+  .cv-caption { font-size: 0.64rem; color: var(--muted); margin-top: 0.7rem; line-height: 1.5; }
+  .cv-caption em { color: var(--accent); font-style: normal; font-weight: 600; }
+
+  /* Typographic visual (case 03 — no photo asset) */
+  .call-vis { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; gap: 0.85rem;
+    padding: 0 0 2.1rem; margin-top: 1.2rem; }
+  .call-old { font-size: 0.98rem; color: var(--muted); line-height: 1.5; word-break: keep-all;
+    text-decoration: line-through; text-decoration-color: rgba(0,0,0,0.18); }
+  .call-arrow { font-size: 1rem; color: var(--accent); font-weight: 700; }
+  .call-new { font-size: 2rem; font-weight: 700; color: var(--accent); letter-spacing: -0.03em; line-height: 1.2; }
+  .call-note { font-size: 0.68rem; color: var(--muted); line-height: 1.55; margin-top: 0.5rem; word-break: keep-all; }
+
+  /* ---- BACK ---- */
+  .card-back {
+    opacity: 0; pointer-events: none;
+    padding: 1.9rem 2rem 5.2rem; overflow-y: auto; overscroll-behavior: contain;
+    background: linear-gradient(165deg, #FAF8F8 0%, #F2EDED 45%, #E9E2E2 100%);
+  }
+  .case-card.is-open .card-back { opacity: 1; pointer-events: auto; }
+  .card-back::-webkit-scrollbar { width: 5px; }
+  .card-back::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.16); border-radius: 3px; }
+  .cb-title { font-size: 1.06rem; font-weight: 700; line-height: 1.4; letter-spacing: -0.02em; color: var(--ink); word-break: keep-all; }
+  .cb-open { font-size: 0.85rem; font-weight: 500; color: #333; line-height: 1.62;
+    margin: 0.85rem 0 1.1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--line); word-break: keep-all; }
+  .cb-acts { list-style: none; }
+  .cb-acts li { display: block; position: relative; padding: 0.62rem 0 0.62rem 1.4rem;
+    border-bottom: 1px solid var(--line); font-size: 0.8rem; color: #3a4149; line-height: 1.7; word-break: keep-all; }
+  .cb-acts li:last-child { border-bottom: none; }
+  .cb-acts li::before { content: '→'; position: absolute; left: 0; top: 0.62rem; color: var(--accent); font-size: 0.76rem; }
+  .cb-acts strong { font-weight: 700; color: var(--ink); }
+  .cb-imgs { display: flex; gap: 8px; margin: 1.1rem 0 0.4rem; }
+  .cb-img-box { flex: 1; border-radius: 10px; overflow: hidden; background: rgba(0,0,0,0.05); }
+  .cb-img-box img, .cb-img-box video { width: 100%; height: 150px; object-fit: cover; object-position: center 28%; display: block; }
+  /* A lone image gets a narrower, taller frame so portrait shots aren't sliced
+     into a thin strip. Add a 2nd/3rd image and the row auto-balances instead. */
+  .cb-imgs.single .cb-img-box { max-width: 58%; margin: 0 auto; }
+  .cb-imgs.single .cb-img-box img { height: 268px; object-position: center 42%; }
+  /* a wide multi-page strip keeps its natural aspect instead of being cropped */
+  .cb-imgs.strip { display: block; }
+  .cb-imgs.strip .cb-img-box { max-width: 100%; margin: 0; background: #F1ECEC; }
+  .cb-imgs.strip .cb-img-box img { height: auto; object-fit: contain; object-position: center; }
+  /* per-image crop overrides */
+  .cb-img-box.crop-mid img { object-position: center 45%; }
+  .cb-img-box.crop-low img { object-position: center 72%; }
+  .cb-cap { font-size: 0.68rem; color: var(--muted); margin-top: 0.45rem; line-height: 1.5; }
+  .cb-result { background: rgba(var(--accent-rgb), 0.06); border-left: 3px solid var(--accent);
+    border-radius: 0 10px 10px 0; padding: 1.05rem 1.2rem; margin-top: 1.2rem; }
+  .cb-nums { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+  .cn-num { font-size: 1.42rem; font-weight: 700; color: var(--accent); letter-spacing: -0.02em; line-height: 1; }
+  .cn-lbl { font-size: 0.64rem; color: #555; margin-top: 0.2rem; line-height: 1.4; }
+  .cb-rtext { font-size: 0.8rem; color: #444; line-height: 1.72; word-break: keep-all; }
+  .cb-rtext strong { font-weight: 600; color: var(--ink); }
+
+  /* ---- toggle button: bottom-left, like toss.im/team ---- */
   .btn-tog {
+    position: absolute; left: 2.1rem; bottom: 1.7rem; z-index: 3;
     width: 34px; height: 34px; border-radius: 50%;
-    border: 1.5px solid rgba(0,0,0,0.18); background: transparent;
-    cursor: pointer; font-size: 1.1rem; color: var(--ink);
+    border: 1.5px solid rgba(0,0,0,0.22); background: rgba(255,255,255,0.55);
+    cursor: pointer; font-size: 1.05rem; color: var(--ink);
     display: flex; align-items: center; justify-content: center;
-    font-family: var(--sans); line-height: 1; flex-shrink: 0;
-    transition: background 0.2s, color 0.2s, border-color 0.2s; user-select: none;
+    font-family: var(--sans); line-height: 1; user-select: none;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
   }
   .btn-tog:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
-
-  /* CARD BODY — fixed-size stage. Front/back overlay each other and only
-     cross-fade opacity; the card's footprint never changes on toggle. */
-  .card-body { position: relative; }
-  .card-front, .card-back {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    opacity: 1; transition: opacity 0.28s ease;
-  }
-  .card-back { opacity: 0; pointer-events: none; padding-bottom: 2rem; overflow: hidden; }
-  .case-card.is-open .card-front { opacity: 0; pointer-events: none; }
-  .case-card.is-open .card-back { opacity: 1; pointer-events: auto; }
-
-  /* CARD FRONT */
-  .card-front { display: flex; flex-direction: column; }
-  .card-num { font-size: 5.5rem; font-weight: 800; color: rgba(0,0,0,0.05); line-height: 1; letter-spacing: -0.04em; flex-shrink: 0; }
-  .card-title { font-size: 1.07rem; font-weight: 600; line-height: 1.38; word-break: keep-all; margin-top: 0.25rem; flex-shrink: 0; }
-  /* Photo fills whatever room is left below the title — never resizes the card,
-     just grows/shrinks to match the fixed card height. A bottom gradient blends
-     it into the card even when the source image is short or low-detail. */
-  .card-photo { flex: 1; min-height: 90px; margin: 1.8rem -2rem 0; position: relative; overflow: hidden; }
-  .card-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .card-photo::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0) 45%, rgba(0,0,0,0.55) 100%);
+  /* front card: the button sits under the title, above the photo */
+  .btn-front { position: static; margin-top: 1.4rem; flex-shrink: 0; background: rgba(255,255,255,0.6); }
+  /* the absolute close button only exists while the card is open */
+  .case-card > .btn-tog { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+  .case-card.is-open > .btn-tog { opacity: 1; pointer-events: auto; }
+  /* soft fade so scrolling content slides under the close button */
+  .case-card.is-open::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 5.4rem; z-index: 2;
+    background: linear-gradient(to top, #E9E2E2 0%, #E9E2E2 52%, rgba(233,226,226,0) 100%);
     pointer-events: none;
   }
 
-  /* Wide card (case 03) */
-  .cf-wide { display: grid; grid-template-columns: 1fr 52%; gap: 2rem; align-items: stretch; height: 100%; }
-  .cf-wide .card-photo { margin: 0; border-radius: 14px; display: flex; align-items: center; background: transparent; }
-  .cf-wide .card-photo img { border-radius: 14px; height: auto; }
-  .cf-wide .card-photo::after { display: none; }
-  .cf-wide .cf-stack { display: flex; flex-direction: column; justify-content: center; gap: 12px; }
-  .cf-wide .cf-stack img { border-radius: 12px; }
-  .cb-open { font-size: 0.97rem; font-weight: 500; color: var(--ink); line-height: 1.65; margin-bottom: 1.8rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--line); word-break: keep-all; }
-  .cb-acts { list-style: none; }
-  .cb-acts li { display: flex; gap: 0.9rem; align-items: baseline; padding: 0.82rem 0; border-bottom: 1px solid var(--line); font-size: 0.88rem; color: #333; line-height: 1.78; }
-  .cb-acts li:last-child { border-bottom: none; }
-  .cb-acts li::before { content: '→'; color: var(--accent); flex-shrink: 0; font-size: 0.82rem; }
-  .cb-acts strong { font-weight: 600; color: var(--ink); }
-  .cb-imgs { display: flex; gap: 10px; margin: 1.8rem 0 0.5rem; }
-  .cb-imgs.single { display: block; }
-  .cb-img-box { flex: 1; border-radius: 10px; overflow: hidden; }
-  .cb-imgs.single .cb-img-box { width: 100%; }
-  .cb-img-box img { width: 100%; height: 155px; object-fit: cover; display: block; }
-  .cb-img-box video { width: 100%; height: 155px; object-fit: cover; display: block; }
-  .cb-imgs.single .cb-img-box img { width: 100%; height: 260px; object-fit: cover; object-position: center top; }
-  /* Case 01: fewer bullets, so let the two photos breathe */
-  #card-01 .cb-img-box img { height: 360px; }
-  /* Wide card (Case 03) back: video (left) + guidebook mockup (right), matched height */
-  .case-card--wide .cb-vidwrap { display: flex; gap: 12px; align-items: stretch; }
-  .case-card--wide .cb-vidwrap .cb-v-vid { flex: 0 0 38%; }
-  .case-card--wide .cb-vidwrap .cb-v-guide { flex: 1; }
-  .case-card--wide .cb-vidwrap .cb-img-box { height: 300px; }
-  .case-card--wide .cb-vidwrap video { width: 100%; height: 100%; object-fit: cover; object-position: center; }
-  .case-card--wide .cb-vidwrap img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
-  .cb-cap { font-size: 0.74rem; color: var(--muted); margin-top: 0.5rem; margin-bottom: 1.5rem; line-height: 1.5; }
-  .cb-result { background: var(--adim); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 1.4rem 1.6rem; margin-top: 1.8rem; }
-  .cb-nums { display: flex; gap: 2.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
-  .cn-num { font-size: 1.9rem; font-weight: 700; color: var(--accent); letter-spacing: -0.02em; line-height: 1; }
-  .cn-lbl { font-size: 0.69rem; color: #555; margin-top: 0.2rem; line-height: 1.4; }
-  .cb-rtext { font-size: 0.87rem; color: #444; line-height: 1.78; }
-  .cb-rtext strong { font-weight: 600; color: var(--ink); }
-
   /* GROWTH MINI-CHART — 연도별 온보딩 인원 */
-  .growth { display: flex; align-items: flex-end; gap: 7px; margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px solid rgba(198,41,23,0.15); }
+  .growth { display: flex; align-items: flex-end; gap: 7px; margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px solid rgba(var(--accent-rgb), 0.18); }
   .g-col { flex: 1; display: flex; flex-direction: column; align-items: center; }
   .g-val { font-size: 0.6rem; color: var(--muted); margin-bottom: 4px; letter-spacing: -0.01em; }
   .g-bar { width: 100%; max-width: 44px; border-radius: 3px 3px 0 0; background: rgba(0,0,0,0.14); }
@@ -164,7 +187,7 @@
   .g-col.is-peak .g-bar { background: var(--accent); }
   .g-col.is-peak .g-val { color: var(--accent); font-weight: 700; font-size: 0.68rem; }
   .g-col.is-peak .g-yr { color: var(--accent); font-weight: 600; }
-  .g-col.is-partial .g-bar { background: repeating-linear-gradient(135deg, rgba(198,41,23,0.42) 0 4px, rgba(198,41,23,0.18) 4px 8px); }
+  .g-col.is-partial .g-bar { background: repeating-linear-gradient(135deg, rgba(var(--accent-rgb), 0.42) 0 4px, rgba(var(--accent-rgb), 0.16) 4px 8px); }
   .g-cap { font-size: 0.66rem; color: var(--muted); margin-top: 0.7rem; line-height: 1.5; }
   .g-cap em { color: var(--accent); font-style: normal; font-weight: 600; }
 
@@ -174,27 +197,27 @@
   .voices-title { font-size: clamp(1.1rem, 1.9vw, 1.4rem); font-weight: 600; letter-spacing: -0.02em; word-break: keep-all; }
   .voices-title em { color: var(--accent); font-style: normal; }
   .voices-note { font-size: 0.72rem; color: var(--muted); }
-  .voice-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; }
+  .voice-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.1rem; }
   .voice-card { background: var(--canvas); border: 1px solid var(--line); border-radius: 12px; padding: 1.5rem 1.4rem 1.3rem; position: relative; }
   .voice-card::before { content: '\201C'; position: absolute; top: 0.45rem; left: 1.1rem; font-size: 2rem; line-height: 1; color: var(--accent); opacity: 0.25; font-family: Georgia, 'Times New Roman', serif; }
   .voice-q { font-size: 0.845rem; color: #333; line-height: 1.68; word-break: keep-all; }
   .voice-src { margin-top: 1rem; padding-top: 0.8rem; border-top: 1px solid var(--line); font-size: 0.66rem; letter-spacing: 0.03em; color: var(--accent); font-weight: 500; }
 
   /* RETRO */
-  .retro { background: var(--dark); padding: 7rem 7vw; border-top: 1px solid #2a2a2a; }
-  .retro .s-eye { color: #3a3a3a; }
-  .retro .s-title { color: #f0ede6; }
+  .retro { background: var(--dark); padding: 7rem 7vw; border-top: 1px solid #3A3335; }
+  .retro .s-eye { color: #7C7276; }
+  .retro .s-title { color: #FAF8F8; }
   .retro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 3rem; }
-  .retro-p { font-size: 0.94rem; color: #888; line-height: 1.95; }
-  .retro-p strong { font-weight: 400; color: #c8c0b0; }
-  .retro-pull { margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid #2a2a2a; }
-  .rp-text { font-size: clamp(1.1rem, 2.1vw, 1.55rem); font-weight: 600; line-height: 1.42; color: #f0ede6; word-break: keep-all; }
-  .rp-attr { font-size: 0.74rem; color: #3a3a3a; margin-top: 1.2rem; letter-spacing: 0.06em; }
+  .retro-p { font-size: 0.94rem; color: #9A9296; line-height: 1.95; }
+  .retro-p strong { font-weight: 400; color: #F0B9BC; }
+  .retro-pull { margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid #3A3335; }
+  .rp-text { font-size: clamp(1.1rem, 2.1vw, 1.55rem); font-weight: 600; line-height: 1.42; color: #FAF8F8; word-break: keep-all; }
+  .rp-attr { font-size: 0.74rem; color: #7C7276; margin-top: 1.2rem; letter-spacing: 0.06em; }
 
   /* CONTACT */
   .contact { background: var(--parch); padding: 7rem 7vw; border-top: 1px solid var(--line); text-align: center; }
   .contact .s-title { max-width: 22ch; margin: 1.2rem auto 0; }
-  .contact-sub { margin: 1.5rem auto 0; max-width: 44ch; font-size: 0.9rem; color: var(--muted); line-height: 1.85; }
+  .contact-sub { margin: 1.5rem auto 0; max-width: 46ch; font-size: 0.9rem; color: var(--muted); line-height: 1.85; }
   .contact-btns { display: flex; justify-content: center; gap: 1rem; margin-top: 3rem; flex-wrap: wrap; }
   .btn-primary, .btn-outline { display: inline-block; padding: 0.88rem 2.1rem; font-size: 0.82rem; letter-spacing: 0.04em; text-decoration: none; border-radius: 100px; font-family: var(--sans); font-weight: 400; transition: all 0.2s; }
   .btn-primary { background: var(--ink); color: #fff; border: 1px solid var(--ink); }
@@ -211,45 +234,31 @@
   [data-rv].visible { opacity: 1; transform: translateY(0); }
 
   /* RESPONSIVE */
+  @media (max-width: 1000px) {
+    .voice-list { grid-template-columns: repeat(2, 1fr); }
+  }
   @media (max-width: 840px) {
     .about-grid { grid-template-columns: 1fr; gap: 3rem; }
-    .card-grid { grid-template-columns: 1fr; }
-    .case-card--wide { grid-column: 1; }
-    .cf-wide { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
-    .cf-wide .card-photo { margin: 1.5rem -2rem 0; border-radius: 0; }
-    .cf-wide .card-photo img { border-radius: 0; }
     .retro-grid { grid-template-columns: 1fr; gap: 2.5rem; }
     .voice-list { grid-template-columns: 1fr; gap: 0.8rem; }
     .voices { padding: 3.5rem 7vw; }
     .h-stats { gap: 2rem; flex-wrap: wrap; }
-    .cb-nums { gap: 1.5rem; }
 
-    /* Mobile: drop the absolute-overlay / fixed-height card stage.
-       Show the back (full content) in normal flow so cards size to content. */
-    .card-body { height: auto !important; }
-    .card-front, .card-back {
-      position: static; height: auto; opacity: 1;
-    }
-    .card-front { display: block; }         /* keep number + title visible */
-    .card-front .card-photo { display: none; } /* but drop the teaser photo (back has richer imagery) */
-    .cf-wide .card-front .card-photo { display: none; }
-    .card-front { margin-bottom: 1.5rem; }  /* space before the back content */
-    .cf-wide { display: block; }            /* undo grid on mobile front */
-    .card-back { opacity: 1; pointer-events: auto; overflow: visible; }
-    .btn-tog { display: none; }             /* no toggle needed when back is always shown */
-    /* Stack the Case 03 back images vertically on narrow screens */
-    .case-card--wide .cb-vidwrap { flex-direction: column; }
-    .case-card--wide .cb-vidwrap .cb-v-vid,
-    .case-card--wide .cb-vidwrap .cb-v-guide { flex: none; width: 100%; }
-    .case-card--wide .cb-vidwrap .cb-img-box { height: auto; }
-    .case-card--wide .cb-vidwrap video { height: 300px; }
-    .case-card--wide .cb-vidwrap img { height: auto; }
-    /* Case 01/02 back images: natural height on mobile */
+    /* Mobile: one column, cards size to content, back always shown */
+    .card-grid { grid-template-columns: 1fr; gap: 1.1rem; }
+    .case-card { aspect-ratio: auto; }
+    .card-face { position: static; }
+    .card-front { padding-bottom: 0; }
+    .card-front .card-photo { display: none; }
+    .card-front .cv-wrap { display: none; }
+    .card-front .btn-front { display: none; }
+    .card-front .card-title { margin-bottom: 1.6rem; }
+    .card-back { opacity: 1; pointer-events: auto; overflow: visible; padding: 1.6rem 1.8rem 2rem; background: transparent; }
+    .card-back .cb-title { display: none; }
+    .case-card > .btn-tog { display: none; }
+    .cb-imgs { flex-direction: column; }
     .cb-img-box img, .cb-img-box video { height: auto; }
-    /* Case 01: stack the two photos vertically so the wide 소식지 composite is fully visible */
-    #card-01 .cb-imgs { flex-direction: column; }
-    #card-01 .cb-img-box img { height: auto; width: 100%; }
-    .cb-imgs.single .cb-img-box img { height: auto; }
+    .cb-nums { gap: 1.4rem; }
   }
   @media (max-width: 540px) {
     nav { padding: 0 5vw; }
@@ -265,33 +274,24 @@
     body { font-weight: 400; }
     nav { display: none; }
 
-    /* 카드 스테이지 해제: 앞면과 뒷면을 일반 흐름으로 */
-    .card-body { height: auto !important; }
-    .card-front, .card-back {
-      position: static; height: auto; opacity: 1 !important;
-      pointer-events: auto; overflow: visible;
-    }
-    .card-front { display: block; margin-bottom: 1.2rem; }
-    .card-front .card-photo { display: none; }
-    .cf-wide { display: block; }
-    .btn-tog { display: none; }
+    .card-grid { display: block; }
+    .case-card { aspect-ratio: auto; margin-bottom: 1.4rem; border-radius: 18px; }
+    .card-face { position: static; opacity: 1 !important; pointer-events: auto; overflow: visible; }
+    .card-front { padding-bottom: 0; }
+    .card-front .card-photo, .card-front .cv-wrap, .card-front .btn-front { display: none; }
+    .card-front .card-title { margin-bottom: 1.2rem; }
+    .card-back { padding: 1.4rem 1.8rem 1.8rem; background: transparent; }
+    .card-back .cb-title { display: none; }
+    .case-card > .btn-tog { display: none; }
 
-    /* 이미지 자연 높이 */
     .cb-imgs { flex-direction: column; }
     .cb-img-box img, .cb-img-box video { height: auto !important; width: 100%; }
-    .case-card--wide .cb-vidwrap { flex-direction: column; }
-    .case-card--wide .cb-vidwrap .cb-img-box { height: auto; }
 
-    /* 페이지 단위 보호 */
-    .case-card, .cb-result, .voice-card, .retro-pull {
-      break-inside: avoid; page-break-inside: avoid;
-    }
+    .case-card, .cb-result, .voice-card, .retro-pull { break-inside: avoid; page-break-inside: avoid; }
     .hero { min-height: auto; padding: 2rem 0 3rem; }
     .about, .cases, .voices, .retro, .contact { padding: 2.5rem 0; }
-    .card-grid { display: block; }
-    .case-card { margin-bottom: 1.5rem; }
+    .voice-list { grid-template-columns: repeat(2, 1fr); }
 
-    /* 배경색·강조색 유지 (기본은 인쇄 시 삭제됨) */
     * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .hero, .h-eye, .h-title, .h-sub { animation: none; opacity: 1; }
     [data-rv] { opacity: 1 !important; transform: none !important; }
@@ -314,7 +314,7 @@
 
 <!-- HERO -->
 <section class="hero" id="top">
-  <p class="h-eye">조직문화 · 교육 Portfolio · 박세미</p>
+  <p class="h-eye">Culture BP Portfolio · 박세미</p>
   <h1 class="h-title">
     선언된 가치는<br>
     어떻게 <em>일하는 방식</em>이<br>
@@ -323,16 +323,20 @@
   <p class="h-sub">저는 조직문화와 교육을 분리해서 보지 않습니다. 겉보기엔 다른 동료들을 땅속에서 잇는 균근처럼, 진단에서 출발해 배움이 행동이 되고 그 행동이 문화로 뿌리내리는 구조를 먼저 만들어 보여주는 사람입니다.</p>
   <div class="h-stats">
     <div>
-      <div class="hs-num">60%</div>
-      <div class="hs-lbl">현장 독립 기간 단축<br>10개월 → 4개월</div>
+      <div class="hs-num">3개월</div>
+      <div class="hs-lbl">랜딩 완료 기간<br>최대 1년 → 3개월</div>
     </div>
     <div>
-      <div class="hs-num">124%</div>
-      <div class="hs-lbl">온보딩 KPI 달성<br>97% 소프트랜딩</div>
+      <div class="hs-num">97%</div>
+      <div class="hs-lbl">신규 입사자<br>3개월 내 소프트랜딩</div>
     </div>
     <div>
       <div class="hs-num">2.1배</div>
       <div class="hs-lbl">연간 온보딩 규모 확대<br>99명 → 209명</div>
+    </div>
+    <div>
+      <div class="hs-num">600+</div>
+      <div class="hs-lbl">직접 훈련·평가한<br>누적 교육생</div>
     </div>
   </div>
 </section>
@@ -344,28 +348,29 @@
   <div class="about-grid" data-rv>
     <div>
       <p class="about-belief">
-        "박세미와 동료라서 든든하다." 커리어 첫날부터 지금까지 지켜온 단 하나의 기준입니다.
+        "세미님과 함께여서 만족스럽다." 커리어 첫날부터 지금까지 지켜온 단 하나의 기준입니다.
       </p>
       <ul class="about-facts">
-        <li>테라로사 8년차 — 바리스타로 시작해 2021년부터 5년간 조직의 조직문화·HRD 기능을 밑그림부터 구축·운영한 사내 유일 현장 출신 기획자</li>
-        <li>AI를 무기로 HTML/CSS/JS 웹 시스템 직접 개발 · Premiere Pro 독학 영상 제작 · 298p 매뉴얼 단독 집필</li>
+        <li>테라로사 8년 : 바리스타로 시작해 2021년부터 조직문화·교육 기능을 밑그림부터 구축·운영한 사내 유일 현장 출신 기획자</li>
+        <li>온보딩 아키텍처 재설계로 랜딩 기간 최대 1년 → 3개월, 연간 교육 인원 99명 → 209명(2.1배) · 3개월 내 소프트랜딩 97%</li>
+        <li>AI를 무기로 온보딩 웹앱 직접 개발 · Premiere Pro 독학으로 직무 교육 영상 12편 제작 · 298p 브랜드 매뉴얼북 단독 집필</li>
         <li>교육생 600명 이상 직접 훈련·평가 배출 · 美 커피 평가 기관 ACE 국제 센서리 교육 조교·통역 2회 참여</li>
-        <li>온보딩 체계 개편으로 연간 교육 인원 99명 → 209명 2.1배 확대 · KPI 124% 달성</li>
-        <li>섬유공학 전공 · 첫 커리어는 해외 발주·품질검수·통관을 전 과정 영어로 수행한 의류 부자재 실무</li>
+        <li>호칭 '님' 단일화 변화관리 4년 : 선후배 체계를 전 현장 '님'으로 전환, 신입이 먼저 질문하는 조직으로 · 사내 소식지 웹 구축 후 팀 이관</li>
+        <li>단국대학교(죽전) 섬유공학 전공 · 첫 커리어는 해외 발주·품질검수·통관을 전 과정 영어로 수행한 의류 부자재 실무</li>
       </ul>
     </div>
     <div class="pillars">
       <div class="pillar">
         <div class="p-name">Diagnose First</div>
-        <div class="p-desc">현상이 아닌 본질을 파고듭니다. 데이터와 현장의 목소리를 동시에 읽어 문제를 정확히 정의합니다.</div>
+        <div class="p-desc">현상이 아닌 본질을 파고듭니다. 모든 가정에 물음표를 던져, 원래 그래왔다는 구조부터 다시 봅니다.</div>
       </div>
       <div class="pillar">
-        <div class="p-name">Zero-to-One Execution</div>
-        <div class="p-desc">매뉴얼이 없으면 씁니다. 툴이 없으면 직접 만듭니다. 기획을 직접 실행으로 연결합니다.</div>
+        <div class="p-name">Change Management</div>
+        <div class="p-desc">제도는 공지로 시작되지만, 문화는 누군가 먼저 그렇게 사는 걸 보여줄 때 시작됩니다. 그 첫 번째 사람이 되는 쪽을 택합니다.</div>
       </div>
       <div class="pillar">
         <div class="p-name">Scale by Enabling</div>
-        <div class="p-desc">나 혼자 잘하는 것이 아니라, 팀 전체가 잘할 수 있도록 구조를 설계합니다.</div>
+        <div class="p-desc">나 혼자 잘하는 것이 아니라, 제가 없어도 동료들이 알아서 만들어내는 운동장을 설계합니다.</div>
       </div>
     </div>
   </div>
@@ -382,167 +387,146 @@
 
     <!-- CASE 01 -->
     <div class="case-card" id="card-01" data-rv>
-      <div class="card-hd">
-        <span class="card-tag">조직문화 · 사내 커뮤니케이션</span>
-        <button class="btn-tog" onclick="tog('01')" aria-label="케이스 열기">⊕</button>
-      </div>
-      <div class="card-body" id="body-01">
-      <div class="card-front" id="front-01">
-        <div class="card-num">01</div>
-        <h3 class="card-title">우리다운 것이<br>흐려지기 전에</h3>
-        <div class="card-photo">
-          <img src="images/culture1.jpg" alt="전사 통합 브랜드 매뉴얼">
+      <div class="card-face card-front">
+        <span class="card-tag">Onboarding &amp; Growth</span>
+        <h3 class="card-title">1년 걸리던 랜딩이<br>3개월이 되기까지</h3>
+        <button class="btn-tog btn-front" onclick="tog('01')" aria-label="케이스 열기">⊕</button>
+        <div class="cv-wrap">
+          <div class="cv-chart">
+            <div class="g-col"><span class="g-val">70</span><div class="g-bar" style="height:29%"></div><span class="g-yr">'22</span></div>
+            <div class="g-col"><span class="g-val">75</span><div class="g-bar" style="height:31%"></div><span class="g-yr">'23</span></div>
+            <div class="g-col"><span class="g-val">99</span><div class="g-bar" style="height:41%"></div><span class="g-yr">'24</span></div>
+            <div class="g-col is-peak"><span class="g-val">209</span><div class="g-bar" style="height:86%"></div><span class="g-yr">'25</span></div>
+            <div class="g-col is-partial"><span class="g-val">150</span><div class="g-bar" style="height:62%"></div><span class="g-yr">'26</span></div>
+          </div>
+          <p class="cv-caption">연도별 온보딩 교육 인원 (명) · <em>2025년 체계 개편</em>으로 월 1회 → 2회 채용 전환</p>
         </div>
       </div>
-      <div class="card-back" id="back-01">
-        <p class="cb-open">전사에 '우리다운 것'이 무엇인지, 정의조차 없었습니다.</p>
+      <div class="card-face card-back">
+        <h3 class="cb-title">1년 걸리던 랜딩이 3개월이 되기까지</h3>
+        <p class="cb-open">원인은 개인의 역량 부족이 아니었습니다. 교육·실행·피드백이 단절된 구조였습니다.</p>
         <ul class="cb-acts">
-          <li>
-            <strong>브랜드 매뉴얼북 집필 (0→1)</strong> — 핵심 가치와 일하는 방식을 처음으로 문서화
-          </li>
-          <li>
-            <strong>사내 커뮤니케이션 채널 구축</strong> — 웹 기반 사내 소식지를 단독 제작 후 팀에 이관
-          </li>
-          <li>
-            <strong>호칭 '님' 단일화 변화관리</strong> — 경영진 메시지를 현장 언어로 전파, 온보딩 전반에 내재화
-          </li>
+          <li><strong>3-3-2 순환 온보딩 설계</strong> — 교육 총량은 그대로 두고 배치만 바꿨습니다. 현장에서 배울 때 더 효과적인 내용은 현장으로 보내고, 입사 교육 4일 → 3일, 직무 교육 8일 → 기초 3일 + 심화 2일로 재배치했습니다.</li>
+          <li><strong>리더십 병행 설계</strong> — 리더를 '가르치는 지시자'에서 '함께 만드는 코치'로 재정의하고, 반대하던 리더 한 명 한 명을 만나 설득했습니다.</li>
+          <li><strong>사이클 월 1회 → 2회 전환</strong> — 같은 인원·예산으로 두 배의 신입을 받는 구조가 됐습니다.</li>
         </ul>
-        <div class="cb-imgs">
-          <div class="cb-img-box"><img src="images/culture1.jpg" alt="브랜드 매뉴얼북"></div>
-          <div class="cb-img-box"><img src="images/culture2.jpg" alt="사내 소식지"></div>
-        </div>
-        <p class="cb-cap">직접 기획·집필한 통합 매뉴얼북 (좌) / HTML·CSS로 구축한 사내 소식지 (우)</p>
         <div class="cb-result">
           <div class="cb-nums">
-            <div>
-              <div class="cn-num">298p</div>
-              <div class="cn-lbl">브랜드 매뉴얼북<br>단독 기획·집필</div>
-            </div>
-            <div>
-              <div class="cn-num">0→1</div>
-              <div class="cn-lbl">전사 핵심 가치<br>최초 문서화</div>
-            </div>
+            <div><div class="cn-num">3개월</div><div class="cn-lbl">랜딩 완료 기간<br>최대 1년 → 3개월</div></div>
+            <div><div class="cn-num">97%</div><div class="cn-lbl">신규 입사자<br>소프트랜딩</div></div>
+            <div><div class="cn-num">2.1배</div><div class="cn-lbl">연간 온보딩 규모<br>99명 → 209명</div></div>
           </div>
-          <p class="cb-rtext">추상적으로 떠돌던 가치가 책 한 권과 웹 소식지라는 실체가 되어 온보딩 커리큘럼의 뼈대로 자리 잡았고, 수동적이던 현장에 수평적 커뮤니케이션 문화가 안착했습니다.</p>
+          <p class="cb-rtext">인원이 두 배가 되어도 품질이 흔들리지 않는, 확장 가능한 구조라는 뜻입니다. 숫자보다 값진 변화는 공기였어요. 도제식이던 현장이 서로 쉽게 돕고 도움받는 분위기로 바뀌었다는 피드백, <strong>"구조를 바꾸면 문화가 따라온다"</strong>는 걸 배운 프로젝트입니다.</p>
         </div>
       </div>
-      </div>
+      <button class="btn-tog" onclick="tog('01')" aria-label="케이스 닫기">×</button>
     </div>
 
     <!-- CASE 02 -->
     <div class="case-card" id="card-02" data-rv>
-      <div class="card-hd">
-        <span class="card-tag">Onboarding &amp; Growth</span>
-        <button class="btn-tog" onclick="tog('02')" aria-label="케이스 열기">⊕</button>
+      <div class="card-face card-front">
+        <span class="card-tag">Product &amp; Automation</span>
+        <h3 class="card-title">온보딩을 하나의<br>제품으로 만들었어요</h3>
+        <button class="btn-tog btn-front" onclick="tog('02')" aria-label="케이스 열기">⊕</button>
+        <div class="card-photo"><img src="images/onboarding.JPEG" alt="직접 개발한 온보딩 웹앱"></div>
       </div>
-      <div class="card-body" id="body-02">
-      <div class="card-front" id="front-02">
-        <div class="card-num">02</div>
-        <h3 class="card-title">10개월이<br>4개월이 된 이유</h3>
-        <div class="card-photo">
-          <img src="images/onboarding.JPEG" alt="신규 입사자 온보딩 사이트">
-        </div>
-      </div>
-      <div class="card-back" id="back-02">
-        <p class="cb-open">원인은 개인의 역량 부족이 아니었습니다. 교육·실행·피드백이 단절된 구조였습니다.</p>
+      <div class="card-face card-back">
+        <h3 class="cb-title">온보딩을 하나의 제품으로 만들었어요</h3>
+        <p class="cb-open">떠나기 쉬운 사람들을 붙잡는 건 급여도 복지도 아니었습니다. 데이터가 가리킨 우리만의 강점은 '교육 시스템'이었습니다.</p>
         <ul class="cb-acts">
-          <li>
-            <strong>순환 온보딩 설계</strong> — 집체 교육을 3-3-2 현장 순환 구조로 전환
-          </li>
-          <li>
-            <strong>리더십 교육 병행 설계</strong> — 리더를 '지시자'에서 '코치'로 재정의
-          </li>
-          <li>
-            <strong>교육 플랫폼 단독 구축</strong> — 트래커·퀴즈·평가·학습 데이터 관리를 HTML/CSS/JS로
-          </li>
+          <li><strong>온보딩 웹앱 직접 개발</strong> — 코딩 경험이 없었지만 AI를 활용해 만들었습니다. 이름을 입력하면 그 이름이 페이지 곳곳에 나타나는 <strong>환영받는 느낌을 설계</strong>하고, 진행률 게이미피케이션을 넣었습니다.</li>
+          <li><strong>결과 자동화</strong> — 수기로 진행하던 필기시험·설문을 연결하고 저장부터 가공까지 자동화했습니다. 익일에야 나오던 결과가 교육 종료 당일에 나옵니다.</li>
+          <li><strong>셀프서브 기술 가이드북 (0→1)</strong> — 제작 과정을 기록해 누구나 AI로 자기 도구를 만들 수 있도록 전사에 배포했습니다.</li>
+          <li><strong>임원진 대상 AI 활용 교육 진행</strong> — 한 사람의 실험이 조직의 표준이 되는 경로를 만들었습니다.</li>
         </ul>
-        <div class="cb-imgs single">
-          <div class="cb-img-box">
-            <img src="images/onboarding.JPEG" alt="온보딩 사이트 스크린샷">
-          </div>
+        <div class="cb-imgs">
+          <div class="cb-img-box"><img src="images/onboarding.JPEG" alt="온보딩 웹앱 스크린샷"></div>
+          <div class="cb-img-box"><img src="images/systems2.jpg" alt="셀프서브 기술 가이드북"></div>
         </div>
-        <p class="cb-cap">신규 입사자를 위한 온보딩 사이트 (직접 개발)</p>
+        <p class="cb-cap">직접 개발한 온보딩 웹앱 (좌) / 셀프서브 기술 가이드북 (우)</p>
         <div class="cb-result">
           <div class="cb-nums">
-            <div>
-              <div class="cn-num">60%</div>
-              <div class="cn-lbl">현장 독립 기간 단축<br>10개월 → 4개월</div>
-            </div>
-            <div>
-              <div class="cn-num">97%</div>
-              <div class="cn-lbl">신규 입사자<br>소프트랜딩</div>
-            </div>
-            <div>
-              <div class="cn-num">124%</div>
-              <div class="cn-lbl">온보딩 KPI<br>초과 달성</div>
-            </div>
+            <div><div class="cn-num">당일</div><div class="cn-lbl">시험·설문 결과 정리<br>익일 → 종료 당일</div></div>
+            <div><div class="cn-num">2배</div><div class="cn-lbl">온보딩 시스템 언급률<br>긍정 응답 중 20% → 40%</div></div>
           </div>
-          <p class="cb-rtext">개편 전 연간 99명이던 온보딩 규모를 2025년 209명으로 <strong>2.1배 확대</strong>했습니다. 인원이 두 배가 되어도 품질이 흔들리지 않는, 확장 가능한 구조라는 뜻입니다.</p>
-          <div class="growth">
-            <div class="g-col"><span class="g-val">70</span><div class="g-bar" style="height:24px"></div><span class="g-yr">'22</span></div>
-            <div class="g-col"><span class="g-val">75</span><div class="g-bar" style="height:26px"></div><span class="g-yr">'23</span></div>
-            <div class="g-col"><span class="g-val">99</span><div class="g-bar" style="height:34px"></div><span class="g-yr">'24</span></div>
-            <div class="g-col is-peak"><span class="g-val">209</span><div class="g-bar" style="height:72px"></div><span class="g-yr">'25</span></div>
-            <div class="g-col is-partial"><span class="g-val">150</span><div class="g-bar" style="height:52px"></div><span class="g-yr">'26</span></div>
-          </div>
-          <p class="g-cap">연도별 온보딩 교육 인원 (명) · <em>2025년 체계 개편</em>으로 월 1회 → 2회 채용 전환 · '26년은 7월 현재 진행 중</p>
+          <p class="cb-rtext">가장 뿌듯했던 건 제 결과물이 아니었습니다. 가이드북을 읽은 동료가 엑셀로 공유하던 데이터를 웹 대시보드로 직접 만들어 배포했어요. <strong>제가 직접 하지 않아도 동료들이 알아서 만들어내는 운동장이 생긴 순간,</strong> 도구는 문화가 됩니다.</p>
         </div>
       </div>
-      </div>
+      <button class="btn-tog" onclick="tog('02')" aria-label="케이스 닫기">×</button>
     </div>
 
-    <!-- CASE 03 — WIDE -->
-    <div class="case-card case-card--wide" id="card-03" data-rv>
-      <div class="card-hd">
-        <span class="card-tag">L&amp;D System</span>
-        <button class="btn-tog" onclick="tog('03')" aria-label="케이스 열기">⊕</button>
+    <!-- CASE 03 -->
+    <div class="case-card" id="card-03" data-rv>
+      <div class="card-face card-front">
+        <span class="card-tag">Culture Documentation</span>
+        <h3 class="card-title">우리다운 것이<br>흐려지기 전에</h3>
+        <button class="btn-tog btn-front" onclick="tog('03')" aria-label="케이스 열기">⊕</button>
+        <div class="card-photo"><img src="images/culture1.jpg" alt="전사 통합 브랜드 매뉴얼북"></div>
       </div>
-      <div class="card-body" id="body-03">
-      <div class="card-front cf-wide" id="front-03">
-        <div>
-          <div class="card-num">03</div>
-          <h3 class="card-title">배움이<br>반복 가능하려면</h3>
-        </div>
-        <div class="card-photo cf-stack">
-          <img src="images/systems_title.jpg" alt="직무 교육 영상 타이틀">
-          <img src="images/systems2.jpg" alt="셀프서브 기술 가이드북">
-        </div>
-      </div>
-      <div class="card-back" id="back-03">
-        <p class="cb-open">파편화된 부서 공지, 리더마다 다른 기준. 현장에는 일관된 규칙이 없었습니다.</p>
+      <div class="card-face card-back">
+        <h3 class="cb-title">우리다운 것이 흐려지기 전에</h3>
+        <p class="cb-open">문화가 말로만 전해지면 전설처럼 변형됩니다. 전사에 '우리다운 것'이 무엇인지 정의조차 없었습니다.</p>
         <ul class="cb-acts">
-          <li>
-            <strong>미디어 기반 직무 교육 체계 (0→1)</strong> —
-            Premiere Pro를 독학해 12편의 직무 교육 영상을 단독 기획·촬영·편집했습니다.
-            이를 인정받아 2026년 전사 시무식 영상 제작도 전담했습니다.
-          </li>
-          <li>
-            <strong>통합 직무 매뉴얼 단독 집필</strong> —
-            전 부서의 실무 기준을 처음부터 집대성하고, 신규 리더의 빠른 적응을 위한
-            점장 매뉴얼북 제작에도 참여했습니다.
-          </li>
-          <li>
-            <strong>셀프서브 기술 가이드북 (0→1)</strong> —
-            현장직 비율이 높아 집합교육이 어려운 조직을 위해 GitHub·VS Code·웹 제작법을 담은
-            HTML 가이드북을 만들어 배포했습니다. 이를 읽은 동료가 엑셀로 공유하던 데이터를
-            웹 대시보드로 직접 만들어 쓰기 시작했습니다.
-          </li>
-          <li>
-            <strong>순환형 학습 구조 정착</strong> —
-            배포에 그치지 않고 현장 피드백을 실시간으로 수렴해 즉각 업데이트하는
-            애자일 콘텐츠 운영 구조를 만들었습니다.
-          </li>
+          <li><strong>브랜드 매뉴얼북 단독 기획·집필 (0→1)</strong> — 브랜드의 가치와 조직 문화, 점포 매뉴얼, 각 부서가 공유하고 싶은 내용까지 <strong>298p 한 권</strong>에 담아 약 1년간 주도적으로 만들었습니다. 흔들리지 않아야 할 기준을 종이에 고정한 것입니다.</li>
+          <li><strong>미디어 기반 직무 교육 체계 (0→1)</strong> — 책자보다 폰이 익숙한 동료들에게 "더 열심히 읽으세요"라고 요구하는 대신, 손이 자주 가야 하는 직무 파트는 과감히 간략화하고 Premiere Pro를 독학해 <strong>직무 교육 영상 12편</strong>을 기획·촬영·편집해 QR로 연결했습니다. 기준은 종이에, 소비는 폰에.</li>
+          <li><strong>장비가 없으면 찾아냈습니다</strong> — 사양 문제로 아무도 시작하지 않을 때, 사무실에 방치된 아이맥의 구입 이력을 추적해 사용 허가를 받고 시작했습니다. 이를 인정받아 2026년 전사 시무식 영상도 전담했습니다.</li>
+          <li><strong>사내 커뮤니케이션 채널 구축</strong> — 웹 기반 사내 소식지를 단독 제작한 뒤 팀에 이관해, 제가 없어도 굴러가는 채널로 남겼습니다.</li>
         </ul>
-        <div class="cb-imgs cb-vidwrap">
-          <div class="cb-img-box cb-v-vid"><video src="images/systems1.mp4" poster="images/systems1.jpg" autoplay muted loop playsinline aria-label="직무 교육 영상 클립"></video></div>
-          <div class="cb-img-box cb-v-guide"><img src="images/systems2.jpg" alt="셀프서브 기술 가이드북"></div>
+        <div class="cb-imgs strip">
+          <div class="cb-img-box"><img src="images/manualbook_strip.jpg" alt="브랜드 매뉴얼북 내지 — 브랜드 히스토리, 철학, 영상 매뉴얼, 실무 가이드, 주문 시스템"></div>
         </div>
-        <p class="cb-cap">Premiere Pro 독학으로 제작한 직무 교육 영상 (좌) / 셀프서브 기술 가이드북 (우)</p>
+        <p class="cb-cap">298p 브랜드 매뉴얼북 내지 — 브랜드 히스토리·철학부터 영상 매뉴얼·실무 가이드까지 (QR은 사내 자료라 가림)</p>
+        <div class="cb-imgs">
+          <div class="cb-img-box"><video src="images/systems1.mp4" poster="images/systems1.jpg" autoplay muted loop playsinline aria-label="직무 교육 영상 클립"></video></div>
+          <div class="cb-img-box crop-low"><img src="images/culture2.jpg" alt="웹 기반 사내 소식지"></div>
+        </div>
+        <p class="cb-cap">독학으로 제작한 직무 교육 영상 (좌) / HTML·CSS로 구축한 사내 소식지 (우)</p>
         <div class="cb-result">
-          <p class="cb-rtext">대규모 신규 합류에도 동일한 교육 품질이 유지되는 반복 가능한 성장 구조를 직접 증명해 냈습니다. 배운 사람이 다시 만드는 사람이 되는 것 — 그것이 제가 정의하는 교육의 완성입니다.</p>
+          <div class="cb-nums">
+            <div><div class="cn-num">298p</div><div class="cn-lbl">브랜드 매뉴얼북<br>단독 기획·집필</div></div>
+            <div><div class="cn-num">12편</div><div class="cn-lbl">직무 교육 영상<br>기획·촬영·편집</div></div>
+            <div><div class="cn-num">0→1</div><div class="cn-lbl">전사 가치·문화<br>최초 문서화</div></div>
+          </div>
+          <p class="cb-rtext">이제 신규 입사자는 입사 첫날 이 책을 읽는 시간으로 회사 생활을 시작합니다. 부서 간 소통에서도 <strong>"매뉴얼북 4-5에 따르면"</strong>이라는 화법이 자리 잡았어요. QR로 연결된 영상들은 <strong>랜딩을 1년에서 3개월로 줄이고도 품질을 지킬 수 있게 한 안전장치</strong>가 됐습니다. 문화를 문서로 만드는 일은 박제가 아니라 번역이라고 생각합니다.</p>
         </div>
       </div>
+      <button class="btn-tog" onclick="tog('03')" aria-label="케이스 닫기">×</button>
+    </div>
+
+    <!-- CASE 04 -->
+    <div class="case-card" id="card-04" data-rv>
+      <div class="card-face card-front">
+        <span class="card-tag">Change Management</span>
+        <h3 class="card-title">선배님이<br>세미님이 되기까지</h3>
+        <button class="btn-tog btn-front" onclick="tog('04')" aria-label="케이스 열기">⊕</button>
+        <div class="call-vis">
+          <div class="call-old">"2018년 9월 입사자<br>박세미입니다"</div>
+          <div class="call-arrow">↓</div>
+          <div class="call-new">"세미님"</div>
+          <p class="call-note">한 달 차이로 선배와 후배가 갈리던 호칭을, 4년에 걸쳐 전 현장 '님'으로</p>
+        </div>
       </div>
+      <div class="card-face card-back">
+        <h3 class="cb-title">선배님이 세미님이 되기까지</h3>
+        <p class="cb-open">인사팀은 공지 채널로 "이제 '님'으로 부르자"고 알렸습니다. 그리고 아무 일도 일어나지 않았어요.</p>
+        <ul class="cb-acts">
+          <li><strong>왜 아무도 안 따랐나</strong> — "선배님"이라 높여 부르던 사람을 어떻게 "님"으로 낮춰 부르나요.
+            <strong>낮춰 불리게 되는 쪽이 먼저 괜찮다는 걸 보여주지 않으면</strong> 누구도 시작할 수 없는 구조였습니다.
+            인사팀이 제도를 만들었다면, 현장의 사람을 직접 만나는 건 교육팀의 일이었어요.</li>
+          <li><strong>제가 먼저 '세미님'이 됐습니다</strong> — 도제식 문화에서 커피를 가르치는 사람은 동경의 대상입니다.
+            가장 높여 불릴 자리의 사람이 먼저 내려오면 나머지가 따라올 수 있다고 봤어요.
+            교육 자리에서 "선배님"도 "선생님"도 아닌 <strong>"세미님이라고 불러 주세요"</strong>라고 소개했습니다.</li>
+          <li><strong>새로 들어오는 물부터 바꿨습니다</strong> — 1~2년 차 비율이 유독 높은 업계라, 굳어진 사람을 설득하는 대신
+            매달 합류하는 신규 입사자가 첫날부터 '님'을 쓰게 했어요. 온보딩이 그 입구였고, 저는 그 입구를 쥐고 있었습니다.</li>
+          <li><strong>리더들 사이에는 '분위기'를 만들었습니다</strong> — 저보다 선배인 리더를 먼저 "OO님"이라 부르고,
+            친분 있는 리더부터 바뀐 호칭을 쓰는 모습을 보여 주자 다른 리더들이 "저게 지금 우리 분위기인가?" 하고 느끼기 시작했어요.
+            <strong>규칙으로 강제하는 대신, 이미 그렇게 되어 가는 것처럼 보이게</strong> 만든 것입니다.</li>
+        </ul>
+        <div class="cb-result">
+          <p class="cb-rtext">진짜 성과는 호칭이 아니었습니다. <strong>신입들이 훨씬 쉽게 동료에게 다가가 질문하고 도움을 구합니다.</strong> 2~3년 차는 "선배"라는 부담에 짓눌리지 않고 새로 온 사람을 후배가 아니라 함께 뛰는 동료로 느끼고요. 대부분은 현장을 돌 때 먼저 다가와 "이렇게 바뀌어서 감사하다"고 말해 준 사람들에게서 알게 됐습니다. <strong>제도는 공지로 시작되지만, 문화는 누군가 먼저 그렇게 사는 걸 보여줄 때 시작됩니다.</strong></p>
+        </div>
+      </div>
+      <button class="btn-tog" onclick="tog('04')" aria-label="케이스 닫기">×</button>
     </div>
 
   </div>
@@ -567,6 +551,10 @@
       <p class="voice-q">여러 분야를 어떻게 하면 저희가 잘 이해할지 고민하신 흔적이 보여, 일원이 된 게 뿌듯했습니다.</p>
       <p class="voice-src">교수 설계</p>
     </div>
+    <div class="voice-card">
+      <p class="voice-q">신입이 빨리 자리 잡으니, 가르치는 사람과 배우는 사람이 아니라 함께 가는 동료가 됐어요.</p>
+      <p class="voice-src">현장 리더 · 팀원 피드백</p>
+    </div>
   </div>
 </section>
 
@@ -577,15 +565,15 @@
   <div class="retro-grid">
     <p class="retro-p">
       처음 순환 온보딩 아키텍처를 배포했을 때, 현장 실행률이 예상과 달리 저조했습니다.
-      시스템이 완벽하다는 자신감이 오히려 맹점이 됐습니다.
-      정작 실행해야 할 <strong>현장 리더들의 심리적 저항감</strong>과
-      숙련도 저하에 대한 우려를, 사전에 충분히 케어하지 못했습니다.
+      한 달 차 직원들을 인터뷰해 보니 커리큘럼대로 진행되지 않고 있었어요.
+      처음엔 실망했지만, 현장 출신의 기억을 떠올렸습니다.
+      <strong>현장이 비협조적인 게 아니라, 내가 따르기 어려운 제도를 만든 건 아닐까?</strong>
     </p>
     <p class="retro-p">
-      즉시 제도 배포를 멈추고 현장 리더들과 1:1 대화를 시작했습니다.
-      제도를 강요하는 대신 <strong>그들이 먼저 코치가 될 수 있도록 지원</strong>하는 것으로
-      전략을 전면 수정했습니다. 조직문화는 시스템을 던져주는 것이 아니라
-      스며들게 하는 것임을, 그때 배웠습니다.
+      리더들을 직접 만나 보니 답이 있었습니다. 도제식 교육에 대한 믿음, 산출물 품질에 대한 불신,
+      그리고 폰으로 일하는 현장에 PC용 엑셀 커리큘럼을 준 저의 실수. 커리큘럼을 폰에서 바로 볼 수 있게
+      다시 만들고, 제도를 강요하는 대신 <strong>그들이 먼저 코치가 될 수 있도록 지원</strong>하는 것으로
+      전략을 전면 수정했습니다. <strong>제도를 만든 사람과 쓰는 사람의 거리만큼 제도는 작동하지 않는다</strong>는 걸 배웠습니다.
     </p>
   </div>
   <div class="retro-pull">
@@ -600,7 +588,7 @@
 <section class="contact" id="contact">
   <p class="s-eye">Contact</p>
   <h2 class="s-title">서로 다른 동료들을 잇는<br>균근이 되고 싶습니다</h2>
-  <p class="contact-sub">눈에 띄지 않아도, 연결한 사람들이 더 높이 자랄 때 제 역할을 다합니다.</p>
+  <p class="contact-sub">땅속의 균근처럼 팀 사이에 영양분이 흐르는 길을 만들면서, 동시에 누가 봐도 잘하는 동료이고 싶습니다. 제가 연결한 사람들이 더 높이 자라고, 그 이유가 저였으면 좋겠습니다.</p>
   <div class="contact-btns">
     <a href="mailto:bobsemi@me.com" class="btn-primary">이메일 보내기</a>
   </div>
@@ -608,7 +596,7 @@
 
 <!-- FOOTER -->
 <footer>
-  <span>박세미 · 조직문화 · 교육</span>
+  <span>박세미 · Culture BP</span>
   <span>© 2026</span>
 </footer>
 
@@ -626,69 +614,9 @@
   );
   document.querySelectorAll('[data-rv]').forEach(el => rvObs.observe(el));
 
-  // Card sizing — lock each card's body height to its (larger) back-content
-  // height, so front/back never change the card's footprint. The front's
-  // photo simply flexes to fill whatever room is left below the title.
-  const CARD_NUMS = ['01', '02', '03'];
-
-  function backHeight(num) {
-    const body = document.getElementById('body-' + num);
-    const back = document.getElementById('back-' + num);
-    if (!body || !back) return 0;
-    body.style.height = 'auto';
-    return back.scrollHeight;
-  }
-
-  function setHeight(num, h) {
-    const body = document.getElementById('body-' + num);
-    if (body) body.style.height = h + 'px';
-  }
-
-  function sizeAllCards() {
-    // Mobile: cards are laid out in normal flow (see CSS @media),
-    // so never pin pixel heights — that caused overlap & scroll jumps.
-    if (!window.matchMedia('(min-width: 841px)').matches) {
-      ['01','02','03'].forEach(num => {
-        const body = document.getElementById('body-' + num);
-        if (body) body.style.height = '';
-      });
-      return;
-    }
-    const twoCol = true;
-    const h1 = backHeight('01');
-    const h2 = backHeight('02');
-    if (twoCol) {
-      // 01·02 sit side by side — lock both to the taller one.
-      const pair = Math.max(h1, h2);
-      setHeight('01', pair);
-      setHeight('02', pair);
-    } else {
-      // Single column — each card keeps its own height (no empty gaps).
-      setHeight('01', h1);
-      setHeight('02', h2);
-    }
-    setHeight('03', backHeight('03'));
-  }
-
-  sizeAllCards();
-  window.addEventListener('load', sizeAllCards);
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(sizeAllCards);
-  }
-  let rTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(rTimer);
-    rTimer = setTimeout(sizeAllCards, 150);
-  });
-
-  // Card toggle — pure cross-fade between front/back, no layout shift
+  // Card toggle — cross-fade between front/back inside a fixed-size card
   function tog(num) {
-    const card = document.getElementById('card-' + num);
-    const btn  = card.querySelector('.btn-tog');
-    const opening = !card.classList.contains('is-open');
-    card.classList.toggle('is-open');
-    btn.textContent = opening ? '×' : '⊕';
-    btn.style.fontSize = opening ? '1rem' : '';
+    document.getElementById('card-' + num).classList.toggle('is-open');
   }
 </script>
 </body>
